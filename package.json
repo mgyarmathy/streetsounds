@@ -1,0 +1,20 @@
+{
+  "name": "streetsounds",
+  "version": "1.0.0",
+  "description": "Project for CSCE 438 Distributed Systems",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "http://github.com/mgyarmathy/streetsounds"
+  },
+  "bugs": {
+    "url": "https://github.com/mgyarmathy/streetsounds/issues"
+  },
+  "homepage": "https://github.com/mgyarmathy/streetsounds",
+  "devDependencies": {
+    "browser-sync": "^2.5.3",
+    "gulp": "^3.8.11"
+  }
+}
