@@ -14,7 +14,7 @@ gulp.task('browser-sync', function() {
 });
 
 gulp.task('watch', function () {
-    gulp.watch(['**/*.html', 'app.js'], ['reload']);
+    gulp.watch(['**/*.html', 'app.js', 'plangular.js'], ['reload']);
 });
 
 gulp.task('default', ['browser-sync', 'watch']);

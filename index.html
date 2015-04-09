@@ -21,7 +21,7 @@
       <h4 class="m0 flex-auto">StreetSounds</h4>
   	</div>
   </div>
-  <div style="min-height: 200px; background-image: url('{{track.artwork_url || 'http://i.telegraph.co.uk/multimedia/archive/01216/g3_1216052i.jpg'}}'); background-size: contain; background-position: center center; background-repeat: no-repeat;"></div>
+  <div ng-style="{'background-image': 'url(http://farm'+photo.farm+'.staticflickr.com/'+photo.server+'/'+photo.id+'_'+photo.secret+'.jpg)'}" style="min-height: 200px; background-size: contain; background-position: center center; background-repeat: no-repeat;"></div>
   <div class="p2">
     <div class="flex flex-center">
       <h4 class="m0 caps flex-auto">{{playlist.title}}</h4>

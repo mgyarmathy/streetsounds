@@ -427,6 +427,7 @@ var geocoder;
 plangular.directive('plangular', ['$timeout', 'plangularConfig', function($timeout, plangularConfig) {
 
   var client_id = plangularConfig.clientId;
+  var flickr_id = "b9d37d98a50ac75c4a1f2cf3d2b32252";
   var player = new Player();
 
   return {
@@ -445,6 +446,8 @@ plangular.directive('plangular', ['$timeout', 'plangularConfig', function($timeo
       scope.index = 0;
       scope.playlist;
       scope.tracks = [];
+      scope.photos = [];
+      scope.photo;
 
       function createSrc(track) {
         if (track.stream_url) {
@@ -486,6 +489,7 @@ plangular.directive('plangular', ['$timeout', 'plangularConfig', function($timeo
         if (typeof i !== 'undefined' && scope.tracks.length) {
           scope.index = i;
           scope.track = scope.tracks[i];
+          scope.photo = scope.photos[scope.index%scope.photos.length];
         }
         player.play(scope.track.src);
       };
@@ -498,6 +502,7 @@ plangular.directive('plangular', ['$timeout', 'plangularConfig', function($timeo
         if (typeof i !== 'undefined' && scope.tracks.length) {
           scope.index = i;
           scope.track = scope.tracks[i];
+          scope.photo = scope.photos[scope.index%scope.photos.length];
         }
         player.playPause(scope.track.src);
       };
@@ -541,11 +546,10 @@ plangular.directive('plangular', ['$timeout', 'plangularConfig', function($timeo
               if (status == google.maps.GeocoderStatus.OK) {
                 if (results[1]) {
                   //formatted address
-                  console.log(results[0].formatted_address);
+                  //console.log(results[0].formatted_address);
                   //find country name
                   for (var i=0; i<results[0].address_components.length; i++) {
                     for (var b=0;b<results[0].address_components[i].types.length; b++) {
-                      //there are different types that might hold a city admin_area_lvl_1 usually does in come cases looking for sublocality type will be more appropriate
                       if (results[0].address_components[i].types[b] == "locality") {
                         city = results[0].address_components[i];
                       }
@@ -556,7 +560,12 @@ plangular.directive('plangular', ['$timeout', 'plangularConfig', function($timeo
                   }
                   $.get("http://api.soundcloud.com/tracks.json?client_id="+client_id+"&q="+city.long_name+","+state.long_name+"&limit=100", function(res) {
                     shuffleArray(res);
-                    console.log(res);
+                    $.get("https://api.flickr.com/services/rest/?method=flickr.photos.search&api_key="+flickr_id+"&text="+city.long_name+" "+state.long_name+"&sort=interestingness-desc&format=json&nojsoncallback=1&media=photos", function(response) {
+                      //console.log(response.photos.photo);
+                      scope.photos = response.photos.photo;
+                      scope.photo = scope.photos[0];
+                      scope.$apply();
+                    });
                     if (Array.isArray(res)) {
                       scope.playlist = {title: city.long_name + ", " + state.long_name};
                       scope.tracks = res.map(function(track) {
