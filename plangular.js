@@ -449,6 +449,8 @@ plangular.directive('plangular', ['$timeout', 'plangularConfig', function($timeo
       scope.photos = [];
       scope.photo;
 
+      scope.search = "";
+
       function createSrc(track) {
         if (track.stream_url) {
           track.src = track.stream_url + '?client_id=' + client_id;
@@ -560,12 +562,6 @@ plangular.directive('plangular', ['$timeout', 'plangularConfig', function($timeo
                   }
                   $.get("http://api.soundcloud.com/tracks.json?client_id="+client_id+"&q="+city.long_name+","+state.long_name+"&limit=100", function(res) {
                     shuffleArray(res);
-                    $.get("https://api.flickr.com/services/rest/?method=flickr.photos.search&api_key="+flickr_id+"&text="+city.long_name+" "+state.long_name+"&sort=interestingness-desc&format=json&nojsoncallback=1&media=photos", function(response) {
-                      //console.log(response.photos.photo);
-                      scope.photos = response.photos.photo;
-                      scope.photo = scope.photos[0];
-                      scope.$apply();
-                    });
                     if (Array.isArray(res)) {
                       scope.playlist = {title: city.long_name + ", " + state.long_name};
                       scope.tracks = res.map(function(track) {
@@ -580,6 +576,12 @@ plangular.directive('plangular', ['$timeout', 'plangularConfig', function($timeo
                       scope.$apply();
                     }
                   });
+                  $.get("https://api.flickr.com/services/rest/?method=flickr.photos.search&api_key="+flickr_id+"&text="+city.long_name+" "+state.long_name+"&sort=interestingness-desc&format=json&nojsoncallback=1&media=photos", function(response) {
+                      //console.log(response.photos.photo);
+                    scope.photos = response.photos.photo;
+                    scope.photo = scope.photos[0];
+                    scope.$apply();
+                  });
                 }
               }
               else {
@@ -592,6 +594,33 @@ plangular.directive('plangular', ['$timeout', 'plangularConfig', function($timeo
           console.log("Geolocation is not supported by this browser.");
         }
       };
+
+      scope.searchLocation = function() {
+        var query = scope.search.replace(', United States', '');
+        $.get("http://api.soundcloud.com/tracks.json?client_id="+client_id+"&q="+query+"&limit=75", function(res) {
+          shuffleArray(res);
+          console.log(res);
+          if (Array.isArray(res)) {
+            scope.playlist = {title: query};
+            scope.tracks = res.map(function(track) {
+              return createSrc(track);
+            });
+            scope.$apply();
+          } else if (res.tracks) {
+            scope.playlist = res;
+            scope.tracks = res.tracks.map(function(track) {
+              return createSrc(track);
+            });
+            scope.$apply();
+          }
+        });
+        $.get("https://api.flickr.com/services/rest/?method=flickr.photos.search&api_key="+flickr_id+"&text="+query+"&sort=interestingness-desc&format=json&nojsoncallback=1&media=photos", function(response) {
+            //console.log(response.photos.photo);
+          scope.photos = response.photos.photo;
+          scope.photo = scope.photos[0];
+          scope.$apply();
+        });
+      }
 
       player.audio.addEventListener('timeupdate', function() {
         if (!scope.$$phase && scope.track.src === player.audio.src) {
