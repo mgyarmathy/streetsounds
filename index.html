@@ -65,7 +65,7 @@
     </div>
   </div>
   <ul class="list-reset" style="max-height: 400px; overflow-y: scroll;">
-    <li ng-repeat="track in tracks" ng-if="track.duration < 300000">
+    <li ng-repeat="track in tracks" ng-if="track.duration < 300000" style="border-bottom: 1px solid #ddd;">
       <button
         class="flex flex-center full-width left-align button button-transparent"
         title="Play {{track.title}}"
@@ -78,7 +78,7 @@
           {{ track.duration / 1000 | hhmmss }}
         </span>
       </button>
-    </li>
+    </li>    
   </ul>
 </div>
 </body>
