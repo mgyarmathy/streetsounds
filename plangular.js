@@ -426,7 +426,7 @@ var geocoder;
 
 plangular.directive('plangular', ['$timeout', 'plangularConfig', function($timeout, plangularConfig) {
 
-  var client_id = plangularConfig.clientId;
+  var client_id = "a5e78dcad8b4eb32d6f6382bbc3a95ae";
   var flickr_id = "b9d37d98a50ac75c4a1f2cf3d2b32252";
   var player = new Player();
 
